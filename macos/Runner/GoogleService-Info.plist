@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBhSC88g5JhA0mYaQZA-lvJW2PL4Qpojnc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>961540439243</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.ezdental.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>ezdental-acd94</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ezdental-acd94.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:961540439243:ios:77ab136289423dc635af4e</string>
+</dict>
+</plist>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961540439243",
+    "project_id": "ezdental-acd94",
+    "storage_bucket": "ezdental-acd94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961540439243:android:36bd6a6b120cff0d35af4e",
+        "android_client_info": {
+          "package_name": "com.example.ezdental"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZyW6pEO8AhL-YhT-1m4H9UiQQK_dhFUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
