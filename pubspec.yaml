@@ -58,6 +58,7 @@ dependencies:
   any_link_preview: ^3.0.0
   rating_dialog: ^2.0.4
   in_app_review: ^2.0.6
+  floating_frosted_bottom_bar:
 
 
 
