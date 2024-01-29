@@ -5,6 +5,7 @@ import 'package:ezdental/screens/bottomNavBar/navbar_screen.dart';
 import 'package:ezdental/screens/home/sub_items/help.dart';
 import 'package:ezdental/screens/home/sub_items/news_updates.dart';
 import 'package:ezdental/screens/home/sub_items/rating.dart';
+import 'package:ezdental/screens/home/sub_items/scan.dart';
 import 'package:ezdental/screens/onboard/onboard.dart';
 import 'package:ezdental/screens/preApp/pre_app.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
             '/newsAndUpdates':(context) => NewsAndUpdatesScreen(),
             '/customerSupport':(context) => CustomerSupportScreen(),
             '/rating':(context) => RatingScreen(),
+            '/scan':(context) => Camera(),
 
             // '/second': (context) => const SecondPage(),
           },
