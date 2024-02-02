@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-          initialRoute: '/checkScreen',
+          initialRoute: '/scan', //checkscreen
           routes: {
             '/checkScreen': (context)=> CheckScreen(), //check if user is logged in or not
             '/bottomNavBar': (context) => BottomNavBar(),
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
             '/newsAndUpdates':(context) => NewsAndUpdatesScreen(),
             '/customerSupport':(context) => CustomerSupportScreen(),
             '/rating':(context) => RatingScreen(),
-            '/scan':(context) => Camera(),
+            '/scan':(context) => Scan(),
 
             // '/second': (context) => const SecondPage(),
           },
