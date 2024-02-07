@@ -16,7 +16,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   void _onIntroEnd(context) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => BottomNavBar()),
+      MaterialPageRoute(builder: (_) => NavPage()),
     );
   }
 

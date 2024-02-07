@@ -52,11 +52,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
       if(element['type'] == 'doctor')
       {
+
+
         markerbitmap =
         await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(5, 5)), 'assets/marker.png'
+            ImageConfiguration(size: Size(1, 1)), 'assets/marker.png'
         );
-        // log(dataBytes.toString()  );
+       // log(dataBytes.toString()  );
 
         markers.add(Marker(
           //add start location marker
@@ -76,7 +78,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
         log(markers.length.toString()  );
         setState(() {});
       }
-
 
     });
 

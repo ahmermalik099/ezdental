@@ -1,5 +1,8 @@
 import 'package:ezdental/screens/auth/login.dart';
 import 'package:ezdental/screens/auth/register.dart';
+import 'package:ezdental/screens/chat/appointment.dart';
+import 'package:ezdental/screens/chat/chat.dart';
+import 'package:ezdental/screens/chat/chatting.dart';
 import 'package:ezdental/screens/home/home_screen.dart';
 import 'package:ezdental/screens/bottomNavBar/navbar_screen.dart';
 import 'package:ezdental/screens/home/sub_items/help.dart';
@@ -39,10 +42,10 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-          initialRoute: '/checkScreen', //checkscreen
+          initialRoute: '/checkScreen', //checkScreen
           routes: {
             '/checkScreen': (context)=> CheckScreen(), //check if user is logged in or not
-            '/bottomNavBar': (context) => BottomNavBar(),
+            '/bottomNavBar': (context) => NavPage(),
             '/onBoarding': (context)=> OnboardingPage(),
             '/register': (context)=> RegisterScreen(),
             '/login': (context)=> LoginScreen(),
@@ -52,6 +55,9 @@ class MyApp extends StatelessWidget {
             '/rating':(context) => RatingScreen(),
             '/scan':(context) => Scan(),
             '/userDetails':(context) => UserDetailsScreen(),
+            '/chatting':(context) => ChattingScreen(),
+            '/chat':(context) => ChatScreen(),
+            '/appointment':(context) => AppointmentForm(),
 
             // '/second': (context) => const SecondPage(),
           },

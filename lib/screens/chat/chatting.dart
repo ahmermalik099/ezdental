@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/fire_store.dart';
+import 'appointment.dart';
 import 'components/msg.dart';
 
 class ChattingScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final user =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     if (chatId == '') {
       chatId = user['chatId'];
     }
@@ -33,7 +34,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 33, 140, 176),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CircleAvatar(
               radius: 15,
@@ -48,7 +49,11 @@ class _ChattingScreenState extends State<ChattingScreen> {
             Text(
               name,
               style: TextStyle(color: Colors.white),
-            )
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            IconButton(onPressed: (){}, icon: Icon(Icons.access_time_outlined))
           ],
         ),
       ),
@@ -71,7 +76,20 @@ class _ChattingScreenState extends State<ChattingScreen> {
             child: Row(
               children: [
                 Container(
-                  width: width * 0.8,
+                  width: width * 0.2,
+                  child: IconButton(
+                    onPressed: () {
+                      print('+button pressed');
+                      //AppointmentForm();
+                      print('after +button pressed');
+
+                      //showConfirmationDialog(context);
+                    },
+                    icon: Icon(Icons.add),
+                  ),
+                ),
+                Container(
+                  width: width * 0.6,
                   child: TextField(
                     controller: messageController,
                     decoration: InputDecoration(
@@ -88,9 +106,9 @@ class _ChattingScreenState extends State<ChattingScreen> {
                           [user["uid"], FirebaseAuth.instance.currentUser!.uid],
                           chatId,
                           messageController.text);
-          
+
                       messageController.clear();
-          
+
                       if (user['chatId'] == '') {
                         String cId = await FirestoreService()
                             .checkIfBothChattersExist([
