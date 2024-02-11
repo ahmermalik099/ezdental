@@ -57,8 +57,7 @@ class MyApp extends StatelessWidget {
             '/userDetails':(context) => UserDetailsScreen(),
             '/chatting':(context) => ChattingScreen(),
             '/chat':(context) => ChatScreen(),
-            '/appointment':(context) => AppointmentForm(),
-
+            '/appointment':(context) => AppointmentsScreen(),
             // '/second': (context) => const SecondPage(),
           },
       ),

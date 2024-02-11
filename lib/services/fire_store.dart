@@ -6,14 +6,28 @@ import 'dart:developer';
 
 class FirestoreService {
   // create a document for the user
-  Future<void> createUser(String email, String lat, String long, String userName,String type) async {
+  Future<void> createUser(String email, String lat, String long,
+      String userName, String type) async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     return await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'email': email,
       'lat': lat,
       'long': long,
       'userName': userName,
-      'type':type,
+      'type': type,
+    });
+  }
+
+  Future<void> createAppointment(String email, String doctor, String patient,
+      DateTime dateTime) async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    return await FirebaseFirestore.instance.collection('appointments')
+        .doc(uid)
+        .set({
+      'email': email,
+      'doctor': doctor,
+      'patient': patient,
+      'dateTime': dateTime,
     });
   }
 
@@ -55,7 +69,7 @@ class FirestoreService {
     }, SetOptions(merge: true));
   }
 
-  Future<void> mergeDetails(String age, String city, String gender) async{
+  Future<void> mergeDetails(String age, String city, String gender) async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     return await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'age': age,
@@ -89,11 +103,11 @@ class FirestoreService {
   Stream<DocumentSnapshot<Map<String, dynamic>>> getDetails() {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     return FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
-
   }
 
   Future<List<dynamic>> getUsers() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(
+        'users').get();
 
     List<Map<String, dynamic>> usersList = [];
 
@@ -107,7 +121,8 @@ class FirestoreService {
   }
 
   Future<List<dynamic>> getPatients() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('patients').get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(
+        'patients').get();
 
     List<Map<String, dynamic>> patientsList = [];
 
@@ -121,10 +136,13 @@ class FirestoreService {
   }
 
   Future<Map<String, dynamic>> getUser(String uid) async {
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('users').doc(uid).get();
 
     if (documentSnapshot.exists) {
-      Map<String, dynamic> userData = documentSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic> userData = documentSnapshot.data() as Map<
+          String,
+          dynamic>;
       userData['uid'] = documentSnapshot.id; // Add the UID to the map
       return userData;
     } else {
@@ -134,12 +152,10 @@ class FirestoreService {
   }
 
 
-
-  Future<void> updateChatsCollection(
-      List<String> chatters,
+  Future<void> updateChatsCollection(List<String> chatters,
       String chatId,
       String lastMessage,
-      ) async {
+      String type,) async {
     try {
       // Get a reference to the "chats" collection
       final CollectionReference chatsCollection =
@@ -147,14 +163,15 @@ class FirestoreService {
 
       if (chatId.isEmpty) {
         // If chatId is empty, create a new document and save it to the variable
-        final DocumentReference newChatDoc = await chatsCollection.add({'chatters': chatters});
+        final DocumentReference newChatDoc = await chatsCollection.add(
+            {'chatters': chatters});
         chatId = newChatDoc.id;
       }
 
       log('$chatters');
       log('$chatters.runtimeType');
       log(chatId);
-     // log('$runtimeType.runtimeType');
+      // log('$runtimeType.runtimeType');
       log(lastMessage);
       log('$lastMessage.runtimeType');
       // Update the "chats" collectionnew msg
@@ -163,9 +180,11 @@ class FirestoreService {
         'chat_id': chatId,
         'last_update': FieldValue.serverTimestamp(),
         'last_message': lastMessage,
+        'type': type,
       };
       chatsCollection.doc(chatId).set(chatsData, SetOptions(merge: true));
-      addMessageToChat(chatId, FirebaseAuth.instance.currentUser!.uid, lastMessage);
+      addMessageToChat(
+          chatId, FirebaseAuth.instance.currentUser!.uid, lastMessage, type);
 
       // "chats" collection updated successfully
       log('Chats collection updated successfully');
@@ -176,24 +195,24 @@ class FirestoreService {
   }
 
 
-
-  Future<void> addMessageToChat(
-      String chatId,
+  Future<void> addMessageToChat(String chatId,
       String createdBy,
       String message,
-      ) async {
+      String type,) async {
     try {
       // Get a reference to the chat document
       final DocumentReference chatDocRef =
       FirebaseFirestore.instance.collection('chats').doc(chatId);
 
       // Add a new message document to the "messages" subcollection
-      final CollectionReference messagesCollection = chatDocRef.collection('messages');
+      final CollectionReference messagesCollection = chatDocRef.collection(
+          'messages');
 
       final Map<String, dynamic> messageData = {
         'created_by': createdBy, // Logged-in user's UID
         'message': message,
         'created_at': FieldValue.serverTimestamp(), // Current date and time
+        'type': type,
       };
 
       await messagesCollection.add(messageData);
@@ -207,8 +226,7 @@ class FirestoreService {
   }
 
 
-
-  Stream<QuerySnapshot<Object?>> getChatsForUser()  {
+  Stream<QuerySnapshot<Object?>> getChatsForUser() {
     try {
       // Get a reference to the "chats" collection
       final CollectionReference chatsCollection =
@@ -216,7 +234,8 @@ class FirestoreService {
 
       // Query the "chats" collection to find documents where the "chatters" array contains the user's UID
       var querySnapshot = chatsCollection
-          .where('chatters', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+          .where(
+          'chatters', arrayContains: FirebaseAuth.instance.currentUser!.uid)
           .orderBy('last_update', descending: false)
           .snapshots();
 
@@ -230,7 +249,7 @@ class FirestoreService {
   }
 
 
-  Stream<QuerySnapshot<Object?>> getMessagesForChat(String chatId)  {
+  Stream<QuerySnapshot<Object?>> getMessagesForChat(String chatId) {
     try {
       // Get a reference to the chat document
       final DocumentReference chatDocRef =
@@ -241,7 +260,8 @@ class FirestoreService {
       chatDocRef.collection('messages');
 
       // Query the "messages" subcollection to get all documents
-      final querySnapshot =  messagesCollection.orderBy('created_at', descending: false).snapshots();
+      final querySnapshot = messagesCollection.orderBy(
+          'created_at', descending: false).snapshots();
 
       // Return the list of message documents
       return querySnapshot;
@@ -251,7 +271,6 @@ class FirestoreService {
       return Stream.empty();
     }
   }
-
 
 
   Future<String> checkIfBothChattersExist(List<dynamic> uids) async {
@@ -270,7 +289,8 @@ class FirestoreService {
         final List<dynamic>? chatters = doc['chatters'];
 
         // Check if both UIDs exist in the "chatters" array
-        if (chatters != null && chatters.contains(uids[0]) && chatters.contains(uids[1])) {
+        if (chatters != null && chatters.contains(uids[0]) &&
+            chatters.contains(uids[1])) {
           return doc.id; // Both UIDs exist in this chat document
         }
       }
@@ -284,6 +304,71 @@ class FirestoreService {
     }
   }
 
+
+  Future<void> createBooking(List<String> chatters,
+      String chatId,
+      String lastMessage,) async {
+    try {
+      // Get a reference to the "chats" collection
+      final CollectionReference appointmentsCollection =
+      FirebaseFirestore.instance.collection('appointments');
+
+      if (chatId.isEmpty) {
+        // If chatId is empty, create a new document and save it to the variable
+        final DocumentReference newChatDoc = await appointmentsCollection.add(
+            {'chatters': chatters});
+        chatId = newChatDoc.id;
+      }
+
+      log('$chatters');
+      log('$chatters.runtimeType');
+      log(chatId);
+      // log('$runtimeType.runtimeType');
+      log(lastMessage);
+      log('$lastMessage.runtimeType');
+      // Update the "chats" collectionnew msg
+      final Map<String, dynamic> chatsData = {
+        'chatters': chatters,
+        'chat_id': chatId,
+        'last_update': FieldValue.serverTimestamp(),
+        'last_message': lastMessage,
+      };
+      appointmentsCollection.doc(chatId).set(
+          chatsData, SetOptions(merge: true));
+
+
+      // "chats" collection updated successfully
+      log('Chats collection updated successfully');
+    } catch (e) {
+      // Handle any errors
+      print('Error updating chats collection: $e');
+    }
+  }
+
+
+  Stream<QuerySnapshot<Object?>> getBookingForUser() {
+    try {
+      // Get a reference to the "chats" collection
+      final CollectionReference appointmentsCollection =
+      FirebaseFirestore.instance.collection('appointments');
+
+      // Query the "chats" collection to find documents where the "chatters" array contains the user's UID
+      var querySnapshot = appointmentsCollection
+          .where(
+          'chatters', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+          .orderBy('last_update', descending: false)
+          .snapshots();
+
+      // Return the list of chat documents
+      return querySnapshot;
+    } catch (e) {
+      // Handle any errors
+      print('Error fetching chat documents: $e');
+      return Stream.empty();
+    }
+  }
+
 }
+
 
 

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/fire_store.dart';
 import 'appointment.dart';
+import 'components/booking_msg.dart';
 import 'components/msg.dart';
 
 class ChattingScreen extends StatefulWidget {
@@ -16,14 +17,46 @@ class ChattingScreen extends StatefulWidget {
 }
 
 class _ChattingScreenState extends State<ChattingScreen> {
+
+
+
   final TextEditingController messageController = TextEditingController();
   String chatId = '';
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null && picked != selectedTime)
+      setState(() {
+        selectedTime = picked;
+      });
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final user =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     if (chatId == '') {
       chatId = user['chatId'];
     }
@@ -33,29 +66,104 @@ class _ChattingScreenState extends State<ChattingScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 33, 140, 176),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CircleAvatar(
-              radius: 15,
-              backgroundImage: NetworkImage(
-                user['pfp_url'] ??
-                    'https://images.immediate.co.uk/production/volatile/sites/3/2023/08/fdee6eacd43859584486e44228df60491637670269main-Cropped-8330369.jpg?resize=768,574',
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CircleAvatar(
+                radius: 15,
+                backgroundImage: NetworkImage(
+                  user['pfp_url'] ??
+                      'https://images.immediate.co.uk/production/volatile/sites/3/2023/08/fdee6eacd43859584486e44228df60491637670269main-Cropped-8330369.jpg?resize=768,574',
+                ),
               ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              name,
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            IconButton(onPressed: (){}, icon: Icon(Icons.access_time_outlined))
-          ],
-        ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                name,
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+            ],
+          ),
+          //appointment function
+          actions: [
+          FutureBuilder<List<dynamic>>(
+            future: FirestoreService().getUsers(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final users = snapshot.data!;
+                final bool isDoctor = users.any((user) => user['type'] == 'doctor');
+                if (isDoctor) {
+                  return   ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Confirm Appointment'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Text('Selected Date: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}'),
+                                    onTap: () => _selectDate(context),
+                                  ),
+                                  ListTile(
+                                    title: Text('Selected Time: ${selectedTime.hour}:${selectedTime.minute}'),
+                                    onTap: () => _selectTime(context),
+                                  ),
+                                  Text('Are you sure you want to book this appointment?'),
+                                  Text('Date: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}'),
+                                  Text('Time: ${selectedTime.hour}:${selectedTime.minute}'),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('Confirm'),
+                                onPressed: () async {
+                                  await FirestoreService().updateChatsCollection(
+                                      [user["uid"], FirebaseAuth.instance.currentUser!.uid],
+                                      chatId,
+                                      'Date: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}\nTime: ${selectedTime.hour}:${selectedTime.minute}','booking');
+                                    await FirestoreService().createBooking(
+                                      [user["uid"], FirebaseAuth.instance.currentUser!.uid],
+                                      chatId,
+                                      'Date: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}\nTime: ${selectedTime.hour}:${selectedTime.minute}',
+                                    );
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text('Book An Appointment'),
+                    //icon: Icon(Icons.access_time_outlined),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              }
+            },
+          ),
+        ]
+
       ),
       body: Column(
         children: [
@@ -80,7 +188,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                   child: IconButton(
                     onPressed: () {
                       print('+button pressed');
-                      //AppointmentForm();
+                      //  AppointmentForm();
                       print('after +button pressed');
 
                       //showConfirmationDialog(context);
@@ -105,7 +213,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                       await FirestoreService().updateChatsCollection(
                           [user["uid"], FirebaseAuth.instance.currentUser!.uid],
                           chatId,
-                          messageController.text);
+                          messageController.text,'message');
 
                       messageController.clear();
 
@@ -148,6 +256,10 @@ class MessageStream extends StatelessWidget {
           return ListView.builder(
             itemCount: messagesDocs.length,
             itemBuilder: (context, index) {
+              if(messagesDocs[index]['type'] == 'booking')
+                return BookingMessage(
+                  bookingMessage: messagesDocs[index]['message'],
+                );
               return MyMessage(
                   isUser: messagesDocs[index]['created_by'] ==
                       FirebaseAuth.instance.currentUser!.uid,
@@ -168,6 +280,9 @@ class MessageStream extends StatelessWidget {
     );
   }
 }
+
+
+
 
 
 

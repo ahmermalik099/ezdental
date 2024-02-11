@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:ezdental/screens/home/home_screen.dart';
 import 'package:ezdental/screens/maps/maps_screen.dart';
 import 'package:ezdental/screens/user/profile_screen.dart';
@@ -8,6 +10,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../riverpod/provider.dart';
+import '../chat/appointment.dart';
 import '../chat/chat.dart';
 
 
@@ -19,13 +22,14 @@ class NavPage extends ConsumerWidget {
 
   /// Controller to handle bottom nav bar and also handles initial page
 
-  int maxCount = 4;
+  int maxCount = 5;
 
   final List<Widget> bottomBarPages = [
     HomeScreen(),
     ExploreScreen(),
     ChatScreen(),
     UserProfileScreen(),
+    AppointmentsScreen(),
   ];
 
   @override
@@ -105,6 +109,18 @@ class NavPage extends ConsumerWidget {
                 color: Colors.blueAccent,
               ),
               itemLabel: 'Profile',
+            ),
+
+            const BottomBarItem(
+              inActiveItem: Icon(
+                Icons.timelapse,
+                color: Colors.blueGrey,
+              ),
+              activeItem: Icon(
+                Icons.person,
+                color: Colors.blueAccent,
+              ),
+              itemLabel: 'Appointments',
             ),
           ]
 
