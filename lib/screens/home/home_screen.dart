@@ -19,9 +19,9 @@ class HomeScreen extends StatelessWidget {
                 shrinkWrap: true,
                 children: [
                   HomeCard(name: 'Scan', image: 'camera.svg', route: 'scan'),
-                  HomeCard(name: 'Wisdom', image: 'about.svg', route: 'onBoarding'),
-                  HomeCard(name: 'News & update', image: 'care.svg',route: 'newsAndUpdates'),
-                  HomeCard(name: 'Support', image: 'helpdesk.svg', route: 'customerSupport'), //help and FAQs
+                  HomeCard(name: 'Wisdom', image: 'onBoarding.svg', route: 'onBoarding'),
+                  HomeCard(name: 'News & update', image: 'newsAndUpdates.svg',route: 'newsAndUpdates'),
+                  HomeCard(name: 'Support', image: 'customerSupport.svg', route: 'customerSupport'), //help and FAQs
 
 
                 ],

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../../services/auth.dart';
 import '../../services/fire_store.dart';
 import '../../services/storage.dart';
+import 'components/profile_slider.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -246,7 +247,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                       ),
                     ),
-                    // ProfileSlider(isEditing: _isEditing, images: images),
+                     ProfileSlider(isEditing: _isEditing, images: images),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.center,
                     //   children: [

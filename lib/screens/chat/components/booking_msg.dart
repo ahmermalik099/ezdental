@@ -6,9 +6,21 @@ class BookingMessage extends StatelessWidget {
   final bookingMessage;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green,
-      child: Text('$bookingMessage'),
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.only(top: 8, left: 38, right: 38, bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text('Your Booking Is Confirmed'),
+            const SizedBox(height: 8),
+            Text('$bookingMessage'),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+
     );
   }
 }

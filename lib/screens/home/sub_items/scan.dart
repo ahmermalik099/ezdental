@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -7,6 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 class Scan extends StatefulWidget {
   const Scan({Key? key}) : super(key: key);
@@ -89,6 +95,146 @@ class _ScanState extends State<Scan> {
   }
 
 
+  // Future<void> generateReport(BuildContext context) async {
+  //   final patient = 'Patient Name';
+  //   print('in gr');
+  //   if (imageBytes == null) {
+  //     // Handle the case where imageBytes is null
+  //     return;
+  //   }
+  //
+  //   await Printing.layoutPdf(
+  //     onLayout: (PdfPageFormat format) async {
+  //       final pdf = pw.Document();
+  //
+  //       pdf.addPage(
+  //         pw.Page(
+  //           build: (pw.Context context) {
+  //             return pw.Column(
+  //               children: [
+  //                 pw.Row(
+  //                   children: [
+  //                     pw.Column(
+  //                       mainAxisAlignment: pw.MainAxisAlignment.start,
+  //                       crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //                       children: [
+  //                         // pw.Text("Name: ${patient.name}"),
+  //                         // pw.Text("Email: ${patient.email}"),
+  //                         // pw.Text("ID: ${patient.id}"),
+  //                         // pw.Text("Phone Number: ${patient.phonenumber}"),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 pw.SizedBox(height: 20),
+  //                 // Ensure imageBytes is not null before using it
+  //                 pw.Image(pw.MemoryImage(Uint8List.fromList(imageBytes!))),
+  //                 pw.SizedBox(height: 20),
+  //                 pw.Center(child: pw.Text("Status : ${body ?? ""}",style: pw.TextStyle(fontSize: 20)))
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //       );
+  //
+  //       return pdf.save();
+  //     },
+  //   );
+  // }
+
+  //new generate report function
+
+
+
+  Future<void> generateReport(BuildContext context) async {
+    final patient = 'Patient Name';
+    print('in gr');
+    imageBytes = image!.readAsBytesSync();
+    // if (imageBytes == null) {
+    //   // Handle the case where imageBytes is null
+    //   print('in null');
+    //   return;
+    // }
+
+    // Find the temporary directory for storing files
+    final tempDir = await getTemporaryDirectory();
+    final filePath = '${tempDir.path}/report.pdf';
+    print(filePath);
+
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            children: [
+              pw.Row(
+                children: [
+                  pw.Column(
+                    mainAxisAlignment: pw.MainAxisAlignment.start,
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      // pw.Text("Name: ${patient.name}"),
+                      // pw.Text("Email: ${patient.email}"),
+                      // pw.Text("ID: ${patient.id}"),
+                      // pw.Text("Phone Number: ${patient.phonenumber}"),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 20),
+              // Ensure imageBytes is not null before using it
+              pw.Image(pw.MemoryImage(Uint8List.fromList(imageBytes!))),
+              pw.SizedBox(height: 20),
+              pw.Center(child: pw.Text("Status : ${body ?? ""}", style: pw.TextStyle(fontSize: 20)))
+            ],
+          );
+        },
+      ),
+    );
+
+    // Save the PDF to the file path
+    final file = File(filePath);
+    await file.writeAsBytes(await pdf.save());
+
+    // Read the PDF as bytes
+    final Uint8List pdfBytes = await file.readAsBytes();
+
+    // Show a message to the user or handle the file as needed
+    print('PDF saved to: $filePath');
+  }
+
+
+
+  void showReportDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Prediction Result'),
+          content: SingleChildScrollView(
+            child: Text('results here'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                print("ahmer");
+                generateReport(context);
+              },
+              child: Text('Report'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // imag from asssets
 
   Future<void> sendImageToServer() async {
@@ -162,6 +308,7 @@ class _ScanState extends State<Scan> {
                 ),
                 onPressed: () {
                   sendImageToServer();
+                  showReportDialog(context);
                 }
             ),
           ],
