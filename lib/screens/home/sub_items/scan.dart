@@ -82,7 +82,8 @@ class _ScanState extends State<Scan> {
 
     print("before calling the API");
     http.Response response = await http.post(
-      Uri.parse("http://127.0.0.1:5000/"),
+      Uri.parse("https://ezdental.pythonanywhere.com/"),
+      //Uri.parse("http://127.0.0.1:5000/"),
       body: base64,
       headers: requestHeaders,
     );
@@ -246,7 +247,9 @@ class _ScanState extends State<Scan> {
       // Create a multipart request
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('http://127.0.0.1:5000/'),
+        Uri.parse("https://ezdental.pythonanywhere.com/"),
+
+        // Uri.parse('http://127.0.0.1:5000/'),
       );
 
       // Add the image to the request as bytes
