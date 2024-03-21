@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
             '/newsAndUpdates':(context) => NewsAndUpdatesScreen(),
             '/customerSupport':(context) => CustomerSupportScreen(),
             '/rating':(context) => RatingScreen(),
-            '/scan':(context) => Scan(),
+            '/scan':(context) => YoloImageV8(),
             '/userDetails':(context) => UserDetailsScreen(),
             '/chatting':(context) => ChattingScreen(),
             '/chat':(context) => ChatScreen(),
