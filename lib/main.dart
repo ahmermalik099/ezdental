@@ -11,6 +11,7 @@ import 'package:ezdental/screens/home/sub_items/rating.dart';
 import 'package:ezdental/screens/home/sub_items/scan.dart';
 import 'package:ezdental/screens/onboard/onboard.dart';
 import 'package:ezdental/screens/preApp/pre_app.dart';
+import 'package:ezdental/screens/store/products.dart';
 import 'package:ezdental/screens/user/user_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
             '/chatting':(context) => ChattingScreen(),
             '/chat':(context) => ChatScreen(),
             '/appointment':(context) => AppointmentsScreen(),
+            '/products':(context) => ProductPage(),
             // '/second': (context) => const SecondPage(),
           },
       ),

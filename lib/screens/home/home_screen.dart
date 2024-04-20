@@ -20,7 +20,8 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   HomeCard(name: 'Scan', image: 'camera.svg', route: 'scan'),
                   HomeCard(name: 'Wisdom', image: 'onBoarding.svg', route: 'onBoarding'),
-                  HomeCard(name: 'News & update', image: 'newsAndUpdates.svg',route: 'newsAndUpdates'),
+                  //HomeCard(name: 'News & update', image: 'newsAndUpdates.svg',route: 'newsAndUpdates'),
+                  HomeCard(name: 'Products', image: 'newsAndUpdates.svg',route: 'products'),
                   HomeCard(name: 'Support', image: 'customerSupport.svg', route: 'customerSupport'), //help and FAQs
 
 
