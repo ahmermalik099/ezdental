@@ -12,6 +12,7 @@ import 'package:ezdental/screens/home/sub_items/scan.dart';
 import 'package:ezdental/screens/onboard/onboard.dart';
 import 'package:ezdental/screens/preApp/pre_app.dart';
 import 'package:ezdental/screens/productDetails/product_details.dart';
+import 'package:ezdental/screens/store/products.dart';
 import 'package:ezdental/screens/store/store.dart';
 import 'package:ezdental/screens/user/user_details.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,8 @@ import 'firebase_options.dart';
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  Stripe.publishableKey = "pk_test_51P8DU3JRbB4jw7go7ArtaqlHyrYugLvWsEkbTUU9jjLU6sG58YBS67FKzLBPSNVT5nYxUCCVBrDXJDohZ5UhoyHh002JxXCDkL";
-  await dotenv.load(fileName: "assets/.env");  
+  //Stripe.publishableKey = "pk_test_51P8DU3JRbB4jw7go7ArtaqlHyrYugLvWsEkbTUU9jjLU6sG58YBS67FKzLBPSNVT5nYxUCCVBrDXJDohZ5UhoyHh002JxXCDkL";
+  //await dotenv.load(fileName: "assets/.env");
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -66,7 +67,9 @@ class MyApp extends StatelessWidget {
             '/chatting':(context) => ChattingScreen(),
             '/chat':(context) => ChatScreen(),
             '/appointment':(context) => AppointmentsScreen(),
-            '/products':(context) => StoreScreen(),
+            //'/products':(context) => StoreScreen(),
+
+            '/products':(context) => ProductPage(),
             '/product_details':(context) => ProductDetailsScreen(),
             // '/second': (context) => const SecondPage(),
           },
