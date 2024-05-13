@@ -52,11 +52,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
       if(element['type'] == 'doctor')
       {
-
-
         markerbitmap =
         await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(1, 1)), 'assets/marker.png'
+            ImageConfiguration(
+                size: Size(1, 1),
+                devicePixelRatio: 1,
+            ),
+            'assets/doctor.png'
         );
        // log(dataBytes.toString()  );
 

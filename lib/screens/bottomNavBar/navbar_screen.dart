@@ -122,7 +122,7 @@ class NavPage extends ConsumerWidget {
               ),
               itemLabel: 'Appointments',
             ),
-          ]
+          ], kIconSize: 30.0, kBottomRadius: 30.0,
 
       )
           : null,

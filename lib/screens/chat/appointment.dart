@@ -115,7 +115,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     children: [
                       Text('You Have An Appointment', style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
-                      Text('Patient: $patientName'),
                       FutureBuilder(
                         future: fetchDoctorName(doctorNameUid),
                         builder: (context, snapshot) {
@@ -126,7 +125,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         },
                       ),
                       const SizedBox(height: 8),
-                      Text('Doctor: $doctorName\n'),
                       FutureBuilder(
                         future: fetchPatientName(patientNameUid),
                         builder: (context, snapshot) {

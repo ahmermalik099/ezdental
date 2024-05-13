@@ -58,7 +58,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  StripePaymentHandle().stripeMakePayment(product.price);
+                  //StripePaymentHandle().stripeMakePayment(product.price);
                   
                 },
                 child: const Text(
