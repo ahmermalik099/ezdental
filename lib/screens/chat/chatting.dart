@@ -171,17 +171,19 @@ class _ChattingScreenState extends State<ChattingScreen> {
       ),
       body: Column(
         children: [
-          Container(
-            height: height * 0.75,
-            width: width,
-            child: MessageStream(
-              chatId: chatId,
-              imgs: [
-                FirebaseAuth.instance.currentUser!.photoURL ??
-                    'https://www.animesenpai.net/wp-content/uploads/2023/08/dfdc2d53-d37f-425d-8e1a-2594e9505577-1024x513.jpg.webp',
-                user['pfp_url'] ??
-                    'https://images.immediate.co.uk/production/volatile/sites/3/2023/08/fdee6eacd43859584486e44228df60491637670269main-Cropped-8330369.jpg?resize=768,574'
-              ],
+          SingleChildScrollView(
+            child: Container(
+              height: height * 0.75,
+              width: width,
+              child: MessageStream(
+                chatId: chatId,
+                imgs: [
+                  FirebaseAuth.instance.currentUser!.photoURL ??
+                      'https://www.animesenpai.net/wp-content/uploads/2023/08/dfdc2d53-d37f-425d-8e1a-2594e9505577-1024x513.jpg.webp',
+                  user['pfp_url'] ??
+                      'https://images.immediate.co.uk/production/volatile/sites/3/2023/08/fdee6eacd43859584486e44228df60491637670269main-Cropped-8330369.jpg?resize=768,574'
+                ],
+              ),
             ),
           ),
           Expanded(
