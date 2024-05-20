@@ -1,4 +1,5 @@
 import 'package:ezdental/screens/auth/login.dart';
+import 'package:ezdental/screens/auth/patient_register.dart';
 import 'package:ezdental/screens/auth/register.dart';
 import 'package:ezdental/screens/chat/appointment.dart';
 import 'package:ezdental/screens/chat/chat.dart';
@@ -57,10 +58,13 @@ class MyApp extends StatelessWidget {
             '/bottomNavBar': (context) => NavPage(),
             '/onBoarding': (context)=> OnboardingPage(),
             '/register': (context)=> RegisterScreen(),
+            '/patientRegister': (context)=> RegisterPatientScreen(),
             '/login': (context)=> LoginScreen(),
             '/home': (context)=> HomeScreen(),
             '/newsAndUpdates':(context) => NewsAndUpdatesScreen(),
-            '/customerSupport':(context) => CustomerSupportScreen(),
+            //'/customerSupport':(context) => CustomerSupportScreen(),
+            '/customerSupport':(context) => EmailSender(),
+
             '/rating':(context) => RatingScreen(),
             '/scan':(context) => YoloImageV8(),
             '/userDetails':(context) => UserDetailsScreen(),

@@ -55,8 +55,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     log(snapshot.error.toString());
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Text(
-                        'No Chats. Your chat will appear here.'); // Display a message if there's no data.
+                    return Center(
+                      child: const Text(
+                          'No Chats. Your chat will appear here.'),
+                    ); // Display a message if there's no data.
                   } else {
                     // Display the data from Firestore in your UI.
                     //Map<String, dynamic> data = snapshot.data!.docs[0].data();
@@ -102,8 +104,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                   Navigator.pushNamed(context, '/chatting',
                                       arguments: user);
                                 },
+                                // if data["type"] == image then show  random text instead of url whihc is in data["last_message"]
                                 child: ChatRow(
-                                    message: data["last_message"],
+                                    message: data["type"] == "image" ? 'image' : data["last_message"],
                                     name: user[0]['userName'],
                                     img: user[0]['pfp_url'] ??
                                         'https://images.immediate.co.uk/production/volatile/sites/3/2023/08/fdee6eacd43859584486e44228df60491637670269main-Cropped-8330369.jpg?resize=768,574')),

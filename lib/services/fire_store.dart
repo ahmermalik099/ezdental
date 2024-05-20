@@ -190,7 +190,7 @@ class FirestoreService {
       log('Chats collection updated successfully');
     } catch (e) {
       // Handle any errors
-      print('Error updating chats collection: $e');
+      print('Error updating chats collection:$e');
     }
   }
 
@@ -306,6 +306,7 @@ class FirestoreService {
 
 
   Future<void> createBooking(List<String> chatters,
+      List<String> chattersEmail,
       String chatId,
       String lastMessage,) async {
     try {
@@ -329,6 +330,7 @@ class FirestoreService {
       // Update the "chats" collectionnew msg
       final Map<String, dynamic> chatsData = {
         'chatters': chatters,
+        'chatters_email': chattersEmail,
         'chat_id': chatId,
         'last_update': FieldValue.serverTimestamp(),
         'last_message': lastMessage,
@@ -367,8 +369,4 @@ class FirestoreService {
       return Stream.empty();
     }
   }
-
 }
-
-
-

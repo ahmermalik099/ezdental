@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/register');
+                        Navigator.pushNamed(context, '/patientRegister');
                       },
                       child: Text('Are you Patient?'),
                     ),

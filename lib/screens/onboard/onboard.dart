@@ -77,22 +77,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
       pages: [
         PageViewModel(
           title: "Welcome to Ez Dental!",
-          body: "welcome note here",
-        //  "We're thrilled to have you join our growing community of neighbors who are passionate about staying connected, helping each other, and fostering a sense of belonging right where you live.",
+          body: "Welcome to our dental app, where modern technology meets oral care excellence. Discover a smarter way to manage your dental health today!",
           image: _buildImage('welcome'),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: "What is Ez Dental?",
-          body:"about Ez dental.....",
-         // "Hello Neighbors is your one-stop destination for building stronger, more connected neighborhoods. We believe in the power of community, and our app is designed to help you: \n\n 1) Connect with your neighbors\n 2) Ask Questions From Neighbors \n 3) Get Help From Neighbors",
+          body:"Discover EZ Dental, your ultimate dental companion. Connect with nearby patients, chat, scan teeth, and book appointments seamlessly, all within our innovative app",
           image: _buildImage('what'),
           decoration: pageDecoration,
         ),
         PageViewModel(
           title: "Why Ez Dental?",
-          body:"reasons to choose Ez Dental here.....",
-         // "Build Community: We're passionate about fostering strong, supportive communities where everyone feels valued and connected. \n Empower Neighbors: Hello Neighbors empowers you to make a positive impact. \n Stay Safe and Informed: We prioritize your safety and privacy. \n\n",
+          body:"Choose EZ Dental for a smarter approach to oral healthcare. With seamless connectivity to nearby patients, advanced teeth scanning capabilities, and effortless appointment booking, EZ Dental is your trusted partner in achieving a brighter, healthier smile.",
           image: _buildImage('why'),
           decoration: pageDecoration,
         ),

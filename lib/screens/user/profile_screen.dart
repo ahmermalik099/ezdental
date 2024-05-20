@@ -83,11 +83,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             bioController.text = data?['bio'] ?? '';
             ageController.text = data?['age'] ?? '';
             cityController.text = data?['city'] ?? '';
-            img = data?['pfp_url'] ?? '';
+            img = data?['pfp_url'] ?? 'assets/doctor.png';
             String name = data?['name'] ?? 'User Name';
             String gender = data?['gender'] ?? ''; // Default gender
             List<dynamic> images =
-                data?['images']  ?? []; // Default empty list
+                data?['images']  ?? ['assets/pic.jpeg']; // Default empty list
 
             log(data.toString());
             log(images.length.toString());

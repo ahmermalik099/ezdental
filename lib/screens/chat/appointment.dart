@@ -24,21 +24,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   Future<String> fetchDoctorName(String doctorNameUid) async {
     try {
-      print('In try block');
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
       await FirebaseFirestore.instance.collection('users').doc(doctorNameUid).get();
       if (snapshot.exists) {
         doctorName = snapshot.data()?['userName'] ?? '';
-
-        // setState(() {
-        //   doctorName = snapshot.data()?['userName'] ?? '';
-        // });
-        return (doctorName);
+        return doctorName;
       } else {
         patientName = 'Patient Name';
-        // setState(() {
-        //   patientName = 'Patient Name';
-        // });
       }
     } catch (e) {
       // Error occurred while fetching data, handle this error
@@ -53,99 +45,119 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       await FirebaseFirestore.instance.collection('users').doc(patientNameUid).get();
       if (snapshot.exists) {
         patientName = snapshot.data()?['userName'] ?? '';
-        // setState(() {
-        //   patientName = snapshot.data()?['userName'] ?? '';
-        // });
-        return(patientName);
+        return patientName;
       } else {
         patientName = 'Patient Name';
-        // setState(() {
-        //   patientName = 'Patient Name';
-        // });
       }
     } catch (e) {
       // Error occurred while fetching data, handle this error
       print('Error fetching patient data: $e');
     }
-    return"";
+    return "";
+  }
+
+  Future<void> deleteAppointment(String appointmentId) async {
+    try {
+      await FirebaseFirestore.instance.collection('appointments').doc(appointmentId).delete();
+      // Update UI after deleting appointment
+      setState(() {});
+    } catch (e) {
+      print('Error deleting appointment: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirestoreService().getBookingForUser(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Appointments'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirestoreService().getBookingForUser(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-        if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
+          if (snapshot.hasError) {
+            print(snapshot.error);
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-        List<Map<String, dynamic>> appointments = snapshot.data!.docs.map((doc) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          print(data.toString());
-          return {
-            'doctorPatientName': data['chatters'] ?? '',
-            'dateTime': data['last_message'],
-          };
-        }).toList();
+          List<Map<String, dynamic>> appointments = snapshot.data!.docs.map((doc) {
+            Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+            return {
+              'id': doc.id,
+              'doctorPatientName': data['chatters'] ?? '',
+              'dateTime': data['last_message'],
+            };
+          }).toList();
 
-        return Container(
-          constraints: BoxConstraints.expand(),
-          child: ListView.separated(
-            itemCount: appointments.length,
-            itemBuilder: (context, index) {
-              final appointment = appointments[index];
-              patientNameUid = appointment['doctorPatientName'][0];
-              doctorNameUid = appointment['doctorPatientName'][1];
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              image: DecorationImage(
+                image: AssetImage('assets/appointment.jpg'),
+                fit: BoxFit.fitHeight,
+              ),
+            ),
+            padding: EdgeInsets.all(16.0),
+            child: ListView.separated(
+              itemCount: appointments.length,
+              itemBuilder: (context, index) {
+                final appointment = appointments[index];
+                patientNameUid = appointment['doctorPatientName'][1];
+                doctorNameUid = appointment['doctorPatientName'][0];
 
-              fetchDoctorName(doctorNameUid);
-              fetchPatientName(patientNameUid);
+                fetchDoctorName(doctorNameUid);
+                fetchPatientName(patientNameUid);
 
-              print(appointment);
-              return Card(
-                elevation: 4,
-                margin: EdgeInsets.only(top: 8, left: 38, right: 38, bottom: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Text('You Have An Appointment', style: TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      FutureBuilder(
-                        future: fetchDoctorName(doctorNameUid),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                          return Text('Doctor: $doctorName');
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      FutureBuilder(
-                        future: fetchPatientName(patientNameUid),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                          return Text('Patient: $patientName');
-                        },
-                      ),
-                      Text('${appointment['dateTime'].toString()}'),
-                    ],
+                return Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('You Have An Appointment', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        FutureBuilder(
+                          future: fetchDoctorName(doctorNameUid),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            return Text('Doctor: $doctorName');
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        FutureBuilder(
+                          future: fetchPatientName(patientNameUid),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            return Text('Patient: $patientName');
+                          },
+                        ),
+                        Text('${appointment['dateTime'].toString()}'),
+                        SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () => deleteAppointment(appointment['id']),
+                          child: Text('Cancel Appointment'),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return Divider();
-            },
-          ),
-        );
-      },
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider();
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

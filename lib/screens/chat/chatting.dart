@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:ezdental/services/storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../services/fire_store.dart';
 import 'appointment.dart';
@@ -24,6 +26,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
   String chatId = '';
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
+  String ?img;
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -142,6 +145,7 @@ class _ChattingScreenState extends State<ChattingScreen> {
                                       'Date: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}\nTime: ${selectedTime.hour}:${selectedTime.minute}','booking');
                                     await FirestoreService().createBooking(
                                       [user["uid"], FirebaseAuth.instance.currentUser!.uid],
+                                      [user["email"], FirebaseAuth.instance.currentUser!.email!],
                                       chatId,
                                       'Date: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}\nTime: ${selectedTime.hour}:${selectedTime.minute}',
                                     );
@@ -186,15 +190,25 @@ class _ChattingScreenState extends State<ChattingScreen> {
                 Container(
                   width: width * 0.2,
                   child: IconButton(
-                    onPressed: () {
-                      print('+button pressed');
-                      //  AppointmentForm();
-                      print('after +button pressed');
-
-                      //showConfirmationDialog(context);
+                    onPressed: () async {
+                      List<String> imageUrls = (await StorageService().selectFiles()) as List<String>; // Call the selectFiles function to select images
+                      if (imageUrls.isNotEmpty) {
+                        for (String imgUrl in imageUrls) {
+                          await FirestoreService().updateChatsCollection(
+                            [user["uid"], FirebaseAuth.instance.currentUser!.uid],
+                            chatId,
+                            imgUrl,
+                            'image', // Set a type to identify the message as an image
+                          );
+                        }
+                      }
                     },
+
                     icon: Icon(Icons.add),
+
+
                   ),
+
                 ),
                 Container(
                   width: width * 0.6,
@@ -256,10 +270,29 @@ class MessageStream extends StatelessWidget {
           return ListView.builder(
             itemCount: messagesDocs.length,
             itemBuilder: (context, index) {
+
+
               if(messagesDocs[index]['type'] == 'booking')
                 return BookingMessage(
                   bookingMessage: messagesDocs[index]['message'],
                 );
+              if (messagesDocs[index]['type'] == 'image') {
+                return Image.network(
+                  messagesDocs[index]['message'],
+                  width: 200, // Adjust width as needed
+                  height: 200, // Adjust height as needed
+                  fit: BoxFit.cover, // Adjust the fit as needed
+                );
+              }
+
+              // else if(messagesDocs[index]['type'] == 'image') {
+              //   // Display the image
+              //   }
+              // return Image.network(
+              //   messagesDocs[index]['message'],
+              //   width: 200, // Adjust the width as needed
+              //   height: 200, // Adjust the height as needed
+              // );
               return MyMessage(
                   isUser: messagesDocs[index]['created_by'] ==
                       FirebaseAuth.instance.currentUser!.uid,

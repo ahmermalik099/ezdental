@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ezdental/screens/home/home_screen.dart';
 import 'package:ezdental/screens/maps/maps_screen.dart';
 import 'package:ezdental/screens/user/profile_screen.dart';
@@ -10,6 +11,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../riverpod/provider.dart';
+import '../../services/fire_store.dart';
 import '../chat/appointment.dart';
 import '../chat/chat.dart';
 
@@ -17,19 +19,26 @@ import '../chat/chat.dart';
 class NavPage extends ConsumerWidget {
   NavPage({Key? key}) : super(key: key);
 
+
+
   /// Controller to handle PageView and also handles initial page
   // final _pageController = PageController(initialPage: 0);
 
   /// Controller to handle bottom nav bar and also handles initial page
 
   int maxCount = 5;
+  String userType='patient';
+  bool isDoctor=false;
+
+
 
   final List<Widget> bottomBarPages = [
     HomeScreen(),
     ExploreScreen(),
     ChatScreen(),
-    UserProfileScreen(),
     AppointmentsScreen(),
+    UserProfileScreen(),
+
   ];
 
   @override
@@ -40,6 +49,7 @@ class NavPage extends ConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: PageView(
+
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         children: List.generate(
@@ -128,6 +138,24 @@ class NavPage extends ConsumerWidget {
           : null,
     );
   }
+
+
+  Future<String> fetchUserType(String getuserType) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
+      await FirebaseFirestore.instance.collection('users').doc(getuserType).get();
+      if (snapshot.exists) {
+        userType = snapshot.data()?['type'] ?? '';
+        return userType;
+      } else {
+        userType = 'patient';
+      }
+    } catch (e) {
+      // Error occurred while fetching data, handle this error
+      print('Error fetching patient data: $e');
+    }
+    return"";
+  }
 }
 
 class Page1 extends StatelessWidget {
@@ -138,6 +166,7 @@ class Page1 extends StatelessWidget {
     return Container(
         color: Colors.yellow, child: const Center(child: Text('Page 1')));
   }
+
 }
 
 
@@ -147,137 +176,125 @@ class Page1 extends StatelessWidget {
 
 
 
-
-
-
-
-
-// class BottomNavBar extends StatefulWidget {
-//   const BottomNavBar({Key? key}) : super(key: key);
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+//
+// import '../../riverpod/provider.dart';
+//
+// class NavPage extends ConsumerWidget {
+//   NavPage({Key? key}) : super(key: key);
+//
+//   int maxCount = 5;
 //
 //   @override
-//   State<BottomNavBar> createState() => _BottomNavBarState();
-// }
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final _pageController = ref.watch(pageProvider);
+//     final _controller = ref.watch(navItemProver);
 //
-// class _BottomNavBarState extends State<BottomNavBar> with SingleTickerProviderStateMixin {
-//
-//   late int currentPage;
-//   late TabController tabController;
-//
-//   final List<Color> colors = [
-//     Colors.blue,
-//     Colors.blue,
-//     Colors.blue,
-//     Colors.blue,
-//     Colors.blue
-//   ];
-//
-//   @override
-//   void initState() {
-//     currentPage = 0;
-//     tabController = TabController(length: 5, vsync: this);
-//     tabController.animation!.addListener(
-//           () {
-//         final value = tabController.animation!.value.round();
-//         if (value != currentPage && mounted) {
-//           changePage(value);
-//         }
-//       },
-//     );
-//     super.initState();
-//   }
-//
-//   void changePage(int newPage) {
-//     setState(() {
-//       currentPage = newPage;
-//     });
-//   }
-//   @override
-//   void dispose() {
-//     tabController.dispose();
-//     super.dispose();
-//   }
-//
-//
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('EZ Dental'),
-//       ),
-//       body: FrostedBottomBar(
-//         opacity: 0.6,
-//         sigmaX: 5,
-//         sigmaY: 5,
-//         child: TabBar(
-//           indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
-//           controller: tabController,
-//           indicator: const UnderlineTabIndicator(
-//             borderSide: BorderSide(color: Colors.blue, width: 4),
-//             insets: EdgeInsets.fromLTRB(16, 0, 16, 8),
-//           ),
-//           tabs: [
-//             TabsIcon(
-//                 icons: Icons.home,
-//                 color: currentPage == 0 ? colors[0] : Colors.white),
-//             TabsIcon(
-//                 icons: Icons.location_on_outlined,
-//                 color: currentPage == 1 ? colors[1] : Colors.white),
-//             TabsIcon(
-//                 icons: Icons.chat_bubble,
-//                 color: currentPage == 2 ? colors[2] : Colors.white),
-//             TabsIcon(
-//                 icons: Icons.search_sharp,
-//                 color: currentPage == 3 ? colors[3] : Colors.white),
-//             TabsIcon(
-//                 icons: Icons.person,
-//                 color: currentPage == 4 ? colors[4] : Colors.white),
-//           ],
-//         ),
-//         borderRadius: BorderRadius.circular(100),
-//         duration: const Duration(milliseconds: 800),
-//         hideOnScroll: true,
-//         body: (context, controller) => TabBarView(
-//           controller: tabController,
-//           dragStartBehavior: DragStartBehavior.down,
-//           physics: const BouncingScrollPhysics(),
-//           children: [
-//             HomeScreen(),
-//             ExploreScreen(),
+//     return FutureBuilder<List<dynamic>>(
+//       future: FirestoreService().getUsers(), // Replace with your method to fetch user data
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return CircularProgressIndicator();
+//         } else if (snapshot.hasError) {
+//           return Text('Error: ${snapshot.error}');
+//         } else {
+//           final userData = snapshot.data! as Map<String, dynamic>;
+//           final isDoctor = userData['type'] == 'doctor';
+//           final List<Widget> bottomBarPages = [
+//             if (!isDoctor) HomeScreen(),
+//             if (!isDoctor) ExploreScreen(), // Include ExploreScreen if not a doctor
 //             ChatScreen(),
 //             UserProfileScreen(),
-//             UserProfileScreen(),
-//           ]
-//         ),
-//       ),
-//     );
-//   }
+//             AppointmentsScreen(),
+//           ];
 //
-// }
-// class TabsIcon extends StatelessWidget {
-//   final Color color;
-//   final double height;
-//   final double width;
-//   final IconData icons;
-//
-//   const TabsIcon(
-//       {Key? key,
-//         this.color = Colors.white,
-//         this.height = 60,
-//         this.width = 50,
-//         required this.icons})
-//       : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       height: height,
-//       width: width,
-//       child: Center(
-//         child: Icon(
-//           icons,
-//           color: color,
-//         ),
-//       ),
+//           return Scaffold(
+//             resizeToAvoidBottomInset: false,
+//             body: PageView(
+//               controller: _pageController,
+//               physics: NeverScrollableScrollPhysics(),
+//               children: bottomBarPages,
+//             ),
+//             extendBody: true,
+//             bottomNavigationBar: (bottomBarPages.length <= maxCount)
+//                 ? AnimatedNotchBottomBar(
+//               onTap: (index) {
+//                 ref.read(navItemProver.notifier).updateIndex(index);
+//                 ref.read(pageProvider.notifier).updateIndex(index);
+//               },
+//               notchBottomBarController: _controller,
+//               color: Colors.white,
+//               showLabel: false,
+//               notchColor: Colors.black87,
+//               removeMargins: false,
+//               bottomBarWidth: 500,
+//               durationInMilliSeconds: 300,
+//               bottomBarItems: [
+//                 const BottomBarItem(
+//                   inActiveItem: Icon(
+//                     Icons.home_filled,
+//                     color: Colors.blueGrey,
+//                   ),
+//                   activeItem: Icon(
+//                     Icons.home_filled,
+//                     color: Colors.blueAccent,
+//                   ),
+//                   itemLabel: 'Home',
+//                 ),
+//                 const BottomBarItem(
+//                   inActiveItem: Icon(
+//                     Icons.location_on_outlined,
+//                     color: Colors.blueGrey,
+//                   ),
+//                   activeItem: Icon(
+//                     Icons.location_on_outlined,
+//                     color: Colors.blueAccent,
+//                   ),
+//                   itemLabel: 'Collection',
+//                 ),
+//                 const BottomBarItem(
+//                   inActiveItem: Icon(
+//                     Icons.chat_bubble,
+//                     color: Colors.blueGrey,
+//                   ),
+//                   activeItem: Icon(
+//                     Icons.chat_bubble,
+//                     color: Colors.blueAccent,
+//                   ),
+//                   itemLabel: 'Search',
+//                 ),
+//                 const BottomBarItem(
+//                   inActiveItem: Icon(
+//                     Icons.person,
+//                     color: Colors.blueGrey,
+//                   ),
+//                   activeItem: Icon(
+//                     Icons.person,
+//                     color: Colors.blueAccent,
+//                   ),
+//                   itemLabel: 'Profile',
+//                 ),
+//                 const BottomBarItem(
+//                   inActiveItem: Icon(
+//                     Icons.timelapse,
+//                     color: Colors.blueGrey,
+//                   ),
+//                   activeItem: Icon(
+//                     Icons.person,
+//                     color: Colors.blueAccent,
+//                   ),
+//                   itemLabel: 'Appointments',
+//                 ),
+//               ],
+//               kIconSize: 30.0,
+//               kBottomRadius: 30.0,
+//             )
+//                 : null,
+//           );
+//         }
+//       },
 //     );
 //   }
 // }
