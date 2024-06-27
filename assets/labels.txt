@@ -1,2 +1,2 @@
-0 healthy
-1 defected
+1 healthy
+0 defected

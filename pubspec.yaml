@@ -72,6 +72,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   gallery_saver: ^2.0.1
   flutter_email_sender: ^6.0.3
+  paymob_pakistan: ^1.0.7
 
 
 

@@ -30,16 +30,17 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   List<Product> products = [
-    Product(name: 'Toothpaste', price: '\$5.99', imageUrl: 'assets/toothpaste.jpg'),
-    Product(name: 'Toothbrush', price: '\$2.99', imageUrl: 'assets/toothbrush.jpeg'),
-    Product(name: 'Tongue Cleaner', price: '\$2.99', imageUrl: 'assets/tonguecleaners.jpg'),
-    Product(name: 'Mouth Wash', price: '\$6.99', imageUrl: 'assets/mouthwash.jpeg'),
-    Product(name: 'Flosses', price: '\$2.99', imageUrl: 'assets/flosses.jpg'),
-    Product(name: 'Care Kit', price: '\$14.99', imageUrl: 'assets/carekit.jpeg'),
+    Product(name: 'Toothpaste', price: '\$10', imageUrl: 'assets/toothpaste.jpg'),
+    Product(name: 'Toothbrush', price: '\$10', imageUrl: 'assets/toothbrush.jpeg'),
+    Product(name: 'Tongue Cleaner', price: '\$10', imageUrl: 'assets/tonguecleaners.jpg'),
+    Product(name: 'Mouth Wash', price: '\$10', imageUrl: 'assets/mouthwash.jpeg'),
+    Product(name: 'Flosses', price: '\$10', imageUrl: 'assets/flosses.jpg'),
+    Product(name: 'Care Kit', price: '\$10', imageUrl: 'assets/carekit.jpeg'),
     // Add more products here
   ];
 
   Map<Product, int> cart = {};
+  double _total = 0;
 
   void addToCart(Product product) {
     if (cart.containsKey(product)) {
@@ -104,9 +105,9 @@ class _ProductPageState extends State<ProductPage> {
   double calculateTotal() {
     double total = 0;
     cart.forEach((product, quantity) {
-      total += double.parse(product.price.substring(1)) * quantity;
+      _total += double.parse(product.price.substring(1)) * quantity;
     });
-    return total;
+    return _total;
   }
 
   void showCartDialog(BuildContext context) {
@@ -145,7 +146,7 @@ class _ProductPageState extends State<ProductPage> {
                 // For example, navigate to a checkout page
                 //Navigator.of(context).pop();
                 // Add your navigation logic here
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentMethod(_total)));
               },
               child: Text('Complete Purchase'),
             ),
